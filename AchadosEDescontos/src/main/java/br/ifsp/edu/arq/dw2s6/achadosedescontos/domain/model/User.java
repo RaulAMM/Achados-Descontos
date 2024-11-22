@@ -1,11 +1,18 @@
 package br.ifsp.edu.arq.dw2s6.achadosedescontos.domain.model;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +40,11 @@ public class User {
 	
 	@NotNull
 	private int tipo;
+	
+	@ManyToMany(fetch = FetchType.EAGER) 
+	@JoinTable(name = "Cupom_has_Usuario", joinColumns = @JoinColumn(name = "Usuario_IdUsuario"),
+	inverseJoinColumns = @JoinColumn(name = "Cupom_IdCupom"))
+	private List<Cupom> cupoms;
 	
 	
 	
@@ -67,5 +79,25 @@ public class User {
 	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
-	
+	public List<Cupom> getCupoms() {
+		return cupoms;
+	}
+	public void setCupoms(List<Cupom> cupoms) {
+		this.cupoms = cupoms;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(idUsuario);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(idUsuario, other.idUsuario);
+	}	
 }
